@@ -9,6 +9,7 @@ class ObstacleAvoidance(Node):
         self.declare_parameter('distance_seuil', 0.5)
         self.declare_parameter('vitesse_lineaire', 0.2)
         self.declare_parameter('vitesse_angulaire', 0.5)
+        self.declare_parameter('distance_ralentissement', 1.0)
 
         self.scan_sub = self.create_subscription(
             LaserScan, '/scan', self.scan_callback, 10)
@@ -27,14 +28,24 @@ class ObstacleAvoidance(Node):
         seuil = self.get_parameter('distance_seuil').value
         v_lin = self.get_parameter('vitesse_lineaire').value
         v_ang = self.get_parameter('vitesse_angulaire').value
+        seuil_ralenti = self.get_parameter('distance_ralentissement').value
 
-        min_dist = min(self.latest_scan)
+        # on ignore les valeurs infinies/nulles du LiDAR
+        valides = [d for d in self.latest_scan if d > 0.0]
+        if not valides:
+            return cmd
+        min_dist = min(valides)
+
         if min_dist < seuil:
-            # obstacle proche : on tourne
+            # trop proche : rotation sur place
             cmd.linear.x = 0.0
             cmd.angular.z = v_ang
+        elif min_dist < seuil_ralenti:
+            # zone d'approche : on ralentit progressivement
+            facteur = (min_dist - seuil) / (seuil_ralenti - seuil)
+            cmd.linear.x = v_lin * facteur
+            cmd.angular.z = 0.0
         else:
-            # rien devant : on avance
             cmd.linear.x = v_lin
             cmd.angular.z = 0.0
         return cmd

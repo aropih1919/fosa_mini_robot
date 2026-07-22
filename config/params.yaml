@@ -1,5 +1,6 @@
 obstacle_avoidance:
   ros__parameters:
     distance_seuil: 0.5
+    distance_ralentissement: 1.0
     vitesse_lineaire: 0.2
     vitesse_angulaire: 0.5
