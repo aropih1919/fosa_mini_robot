@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<robot name="fosa_mini_robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- ===== CONSTANTES ===== -->
+  <xacro:property name="chassis_length" value="0.3"/>
+  <xacro:property name="chassis_width"  value="0.2"/>
+  <xacro:property name="chassis_height" value="0.08"/>
+  <xacro:property name="wheel_radius"   value="0.05"/>
+  <xacro:property name="wheel_width"    value="0.04"/>
+  <xacro:property name="PI"             value="3.14159265"/>
+
+  <!-- ===== CHÂSSIS ===== -->
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <box size="${chassis_length} ${chassis_width} ${chassis_height}"/>
+      </geometry>
+      <material name="blue">
+        <color rgba="0.0 0.3 0.8 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="${chassis_length} ${chassis_width} ${chassis_height}"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="1.0"/>
+      <inertia ixx="0.01" ixy="0.0" ixz="0.0"
+               iyy="0.01" iyz="0.0" izz="0.02"/>
+    </inertial>
+  </link>
+
+  <!-- ===== MACRO ROUE ===== -->
+  <xacro:macro name="wheel" params="name y_pos">
+    <link name="${name}">
+      <visual>
+        <geometry>
+          <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+        </geometry>
+        <material name="black">
+          <color rgba="0.1 0.1 0.1 1.0"/>
+        </material>
+      </visual>
+      <collision>
+        <geometry>
+          <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="0.2"/>
+        <inertia ixx="0.001" ixy="0.0" ixz="0.0"
+                 iyy="0.001" iyz="0.0" izz="0.001"/>
+      </inertial>
+    </link>
+
+    <joint name="${name}_joint" type="continuous">
+      <parent link="base_link"/>
+      <child  link="${name}"/>
+      <origin xyz="0.0 ${y_pos} 0.0" rpy="${PI/2} 0.0 0.0"/>
+      <axis xyz="0 0 1"/>
+    </joint>
+  </xacro:macro>
+
+  <!-- ===== 2 ROUES MOTRICES ===== -->
+  <xacro:wheel name="left_wheel"  y_pos=" 0.12"/>
+  <xacro:wheel name="right_wheel" y_pos="-0.12"/>
+
+  <!-- ===== ROUE FOLLE ===== -->
+  <link name="caster_wheel">
+    <visual>
+      <geometry>
+        <sphere radius="0.03"/>
+      </geometry>
+      <material name="grey">
+        <color rgba="0.5 0.5 0.5 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <sphere radius="0.03"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.1"/>
+      <inertia ixx="0.0001" ixy="0.0" ixz="0.0"
+               iyy="0.0001" iyz="0.0" izz="0.0001"/>
+    </inertial>
+  </link>
+
+  <joint name="caster_joint" type="fixed">
+    <parent link="base_link"/>
+    <child  link="caster_wheel"/>
+    <origin xyz="${-chassis_length/2 + 0.05} 0.0 ${-chassis_height/2 - 0.03}"
+            rpy="0.0 0.0 0.0"/>
+  </joint>
+
+</robot>
