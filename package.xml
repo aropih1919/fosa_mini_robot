@@ -1,22 +1,25 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>parc2026_mini_robot</name>
+  <name>fosa_mini_robot</name>
   <version>0.1.0</version>
-  <description>Robot différentiel simulé avec LiDAR - évitement d'obstacles réactif - PARC2026</description>
-  <maintainer email="team@parc2026.example">Equipe PARC2026</maintainer>
+  <description>Mini-projet PARC2026 — Robot différentiel autonome</description>
+
+  <maintainer email="liantsoa@example.com">Liantsoa</maintainer>
   <license>MIT</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <exec_depend>rclpy</exec_depend>
-  <exec_depend>sensor_msgs</exec_depend>
-  <exec_depend>geometry_msgs</exec_depend>
-  <exec_depend>robot_state_publisher</exec_depend>
+  <depend>rclpy</depend>
+  <depend>std_msgs</depend>
+  <depend>sensor_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>xacro</depend>
+  <depend>robot_state_publisher</depend>
+  <depend>ros_gz_sim</depend>
+  <depend>ros_gz_bridge</depend>
+  
   <exec_depend>joint_state_publisher</exec_depend>
-  <exec_depend>xacro</exec_depend>
-  <exec_depend>ros_gz_sim</exec_depend>
-  <exec_depend>ros_gz_bridge</exec_depend>
   <exec_depend>tf2_ros</exec_depend>
 
   <test_depend>ament_lint_auto</test_depend>
