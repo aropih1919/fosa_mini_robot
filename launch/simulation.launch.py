@@ -9,24 +9,20 @@ def generate_launch_description():
 
     pkg = get_package_share_directory('fosa_mini_robot')
 
-    # Traiter le xacro
     xacro_file = os.path.join(pkg, 'urdf', 'robot.urdf.xacro')
     robot_description = xacro.process_file(xacro_file).toxml()
 
-    # Robot State Publisher
     robot_state_publisher = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
         parameters=[{'robot_description': robot_description}]
     )
 
-    # Gazebo vide
     gazebo = ExecuteProcess(
         cmd=['gz', 'sim', '-r', 'empty.sdf'],
         output='screen'
     )
 
-    # Spawn du robot
     spawn = Node(
         package='ros_gz_sim',
         executable='create',
